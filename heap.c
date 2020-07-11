@@ -12,6 +12,12 @@ struct heap{
 	cmp_func_t cmp;
 };
 
+void swap (void *arreglo[], size_t x, size_t y) {
+	void* aux = arreglo[x];
+	arreglo[x] = arreglo[y];
+	arreglo[y] = aux;
+}
+
 heap_t *heap_crear(cmp_func_t cmp){
 	heap_t* heap = malloc(sizeof(heap_t));
 	if(!heap) return NULL;
@@ -25,3 +31,42 @@ heap_t *heap_crear(cmp_func_t cmp){
 	return heap;
 }
 
+size_t calculo_maximo(void *arreglo[], cmp_func_t cmp, size_t padre, size_t izq, size_t der){
+	size_t max;
+	max = cmp(arreglo[izq], arreglo[der]) > 0 ? izq : der;
+	return cmp(arreglo[max], arreglo[padre]) > 0 ? max : padre;
+}
+
+void downheap(void *arreglo[], size_t tam, size_t padre, cmp_func_t cmp){
+	if (padre >= tam) return;
+	size_t izq = 2 * padre + 1;
+	size_t der = 2 * padre + 2;
+	size_t max = calculo_maximo(arreglo, cmp, padre, izq, der);
+	if(max != padre){
+		swap(arreglo, max, padre);
+		downheap(arreglo, tam, max, cmp);
+	}
+}
+
+void** heapify(void *arreglo[], size_t n, cmp_func_t cmp){
+	void** datos = malloc(sizeof(void*)*n);
+	if(!datos) return NULL;
+
+	for(size_t i = 0; i < n; i++)
+		datos[i] = arreglo[i];
+
+	downheap(datos, n, n-1, cmp);
+
+	return datos;
+}
+
+heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
+	heap_t* heap = malloc(sizeof(heap_t));
+	if(!heap) return NULL;
+	
+	heap->datos = heapify(arreglo, n, cmp);
+	heap->capacidad = n;
+	heap->cantidad = n;
+	heap->cmp = cmp;
+	return heap;
+}
