@@ -87,3 +87,32 @@ size_t heap_cantidad(const heap_t *heap){
 bool heap_esta_vacio(const heap_t *heap){
 	return heap->cantidad == 0;
 }
+
+/* Agrega un elemento al heap. El elemento no puede ser NULL.
+ * Devuelve true si fue una operación exitosa, o false en caso de error.
+ * Pre: el heap fue creado.
+ * Post: se agregó un nuevo elemento al heap.
+ */
+bool heap_encolar(heap_t *heap, void *elem){
+
+}
+
+void *heap_ver_max(const heap_t *heap){
+	if (!heap->cantidad)
+		return NULL;
+
+	return heap->datos[0];
+}
+
+void *heap_desencolar(heap_t *heap){
+	if(!heap->cantidad) return NULL;
+
+	swap(heap->datos, 0, heap->cantidad-1);
+	void* ret = heap->datos[cantidad-1];
+	heap->cantidad--;
+	downheap(heap->datos, heap->cantidad, 0, heap->cmp);
+
+	// redimensionar a la mitad si cantidad < capacidad / 4
+
+	return ret;
+}
