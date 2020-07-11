@@ -70,3 +70,20 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 	heap->cmp = cmp;
 	return heap;
 }
+
+void heap_destruir(heap_t *heap, void (*destruir_elemento)(void *e)){
+	if(destruir_elemento)
+		for(size_t i = 0; i < heap->cantidad; i++)
+			destruir_elemento(heap->datos[i]);
+
+	free(heap->datos);
+	free(heap);
+}
+
+size_t heap_cantidad(const heap_t *heap){
+	return heap->cantidad;
+}
+
+bool heap_esta_vacio(const heap_t *heap){
+	return heap->cantidad == 0;
+}
