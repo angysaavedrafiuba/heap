@@ -48,11 +48,34 @@ void heap_prueba_crear_arr(){
     print_test("la cantidad en heap es nueve", heap_cantidad(heap) == 9);
     heap_destruir(heap, NULL);
     print_test("se destruyó el heap", true);
-    heap_destruir(heap, NULL);
 }
+
+/*void heap_prueba_destruir_NULL(){
+    printf("------inicio prueba heap destruir NULL\n");
+
+    int a[] = {6,4,7,9,1,2,8,3,5,0};
+    void* arr[10];
+
+    for(size_t i = 0; i<10; i++)
+        arr[i] = &a[i];
+    
+    heap_t *heap = heap_crear(cmp_enteros);
+
+    print_test("se creó un heap", heap != NULL);
+    print_test("el heap esta inicialmente vacio", heap_esta_vacio(heap));
+    print_test("la cantidad en el heap es cero", heap_cantidad(heap) == 0);
+
+}*/
+
+/*
+void heap_prueba_destruir_free(){
+    printf("------inicio prueba heap destruir FREE\n");
+}*/
 
 
 void pruebas_heap_alumno(void){
     heap_prueba_crear();
     heap_prueba_crear_arr();
+    //heap_prueba_destruir_NULL();
+    //heap_prueba_destruir_free();
 }
