@@ -74,9 +74,6 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 	if(!heap) return NULL;
 	
 	heap->datos = heapify(arreglo, n, cmp);
-
-	for(size_t i = 0; i< n; i++)
-		printf("val: %d\n", *(int*)heap->datos[i]);
 	heap->capacidad = n;
 	heap->cantidad = n;
 	heap->cmp = cmp;
