@@ -19,7 +19,7 @@ int cmp_enteros(const void *a, const void *b) {
 
 
 void heap_prueba_crear() {
-    printf("------inicio_prueba_heap_crear");
+    printf("------inicio prueba heap crear\n");
     heap_t *heap = heap_crear(cmp_enteros);
     
     print_test("se creó un heap", heap != NULL);
@@ -31,8 +31,28 @@ void heap_prueba_crear() {
     print_test("se destruyó el heap", true);
 }
 
+void heap_prueba_crear_arr(){
+    printf("------inicio prueba heap crear arr\n");
+    int a[] = {6,4,7,9,1,2,8,3,5,0};
+    void* arr[10];
+
+    for(size_t i = 0; i<10; i++)
+        arr[i] = &a[i];
+
+    heap_t* heap = heap_crear_arr(arr, 10, cmp_enteros);
+
+    print_test("se creó un heap", heap != NULL);
+    print_test("la cantidad en el heap es diez", heap_cantidad(heap) == 10);
+    print_test("ver maximo en heap devuelve nueve", *(int*)heap_ver_max(heap) == 9);
+    print_test("desencolar en heap devuelve nueve", *(int*)heap_desencolar(heap) == 9);
+    print_test("la cantidad en heap es nueve", heap_cantidad(heap) == 9);
+    heap_destruir(heap, NULL);
+    print_test("se destruyó el heap", true);
+    heap_destruir(heap, NULL);
+}
 
 
 void pruebas_heap_alumno(void){
     heap_prueba_crear();
+    heap_prueba_crear_arr();
 }

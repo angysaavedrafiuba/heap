@@ -35,17 +35,22 @@ heap_t *heap_crear(cmp_func_t cmp){
 	return heap;
 }
 
-size_t calculo_maximo(void *arreglo[], cmp_func_t cmp, size_t padre, size_t izq, size_t der){
-	size_t max;
-	max = cmp(arreglo[izq], arreglo[der]) > 0 ? izq : der;
+size_t calculo_maximo(void *arreglo[], size_t tam, cmp_func_t cmp, size_t padre, size_t izq, size_t der){
+	printf("Entra a calculo maximo con valores padre: %d hijo izq: %d hijo der: %d\n",padre, izq, der );
+	if(izq > tam) return padre;
+	
+	size_t max = izq;
+	if(der < tam)
+		max = cmp(arreglo[izq], arreglo[der]) > 0 ? izq : der;
+
 	return cmp(arreglo[max], arreglo[padre]) > 0 ? max : padre;
 }
 
 void downheap(void *arreglo[], size_t tam, size_t padre, cmp_func_t cmp){
 	if (padre >= tam) return;
-	size_t izq = 2 * padre + 1;
+	size_t izq = 2 * padre  + 1;
 	size_t der = 2 * padre + 2;
-	size_t max = calculo_maximo(arreglo, cmp, padre, izq, der);
+	size_t max = calculo_maximo(arreglo, tam, cmp, padre, izq, der);
 	if(max != padre){
 		swap(arreglo, max, padre);
 		downheap(arreglo, tam, max, cmp);
@@ -59,7 +64,8 @@ void** heapify(void *arreglo[], size_t n, cmp_func_t cmp){
 	for(size_t i = 0; i < n; i++)
 		datos[i] = arreglo[i];
 
-	downheap(datos, n, n-1, cmp);
+	for(size_t i = n-1; i>0; i--)
+		downheap(datos, n, i, cmp);
 
 	return datos;
 }
@@ -69,6 +75,12 @@ heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 	if(!heap) return NULL;
 	
 	heap->datos = heapify(arreglo, n, cmp);
+
+	for(size_t i = 0; i< n; i++){
+		printf("ini: %d\n",*(int*)heap->datos[i] );
+		printf("ini2: %d\n",*(int*)arreglo[i] );
+	}
+
 	heap->capacidad = n;
 	heap->cantidad = n;
 	heap->cmp = cmp;
@@ -113,12 +125,8 @@ bool heap_hay_espacio(heap_t *heap) {
 	return true;
 }
 
-/* Agrega un elemento al heap. El elemento no puede ser NULL.
- * Devuelve true si fue una operación exitosa, o false en caso de error.
- * Pre: el heap fue creado.
- * Post: se agregó un nuevo elemento al heap.
- */
 bool heap_encolar(heap_t *heap, void *elem){
+	if(!elem) return false;
 	if(!heap_hay_espacio(heap)) return false;
 
     void **datos = heap->datos;
