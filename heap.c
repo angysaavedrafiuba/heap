@@ -27,8 +27,10 @@ heap_t *heap_crear(cmp_func_t cmp){
 	if(!heap) return NULL;
 
 	heap->datos = malloc(sizeof(void*)*TAM);
-	if(!heap->datos) return NULL;
-
+	if(!heap->datos) {
+		free(heap);
+		return NULL;
+	}
 	heap->capacidad = TAM;
 	heap->cantidad = 0;
 	heap->cmp = cmp;
@@ -43,6 +45,17 @@ size_t calculo_maximo(void *arreglo[], size_t tam, cmp_func_t cmp, size_t padre,
 		max = cmp(arreglo[izq], arreglo[der]) > 0 ? izq : der;
 
 	return cmp(arreglo[max], arreglo[padre]) > 0 ? max : padre;
+}
+
+void upheap(void **datos, size_t hijo, cmp_func_t cmp) {
+    if(hijo == 0) return;
+    size_t padre = (hijo - 1) / 2;
+	
+
+    if(cmp(datos[hijo], datos[padre]) > 0) { //hijo mayor a padre
+        swap(datos, hijo, padre);
+        upheap(datos, padre, cmp);
+    }
 }
 
 void downheap(void *arreglo[], size_t tam, size_t padre, cmp_func_t cmp){
@@ -124,11 +137,10 @@ bool heap_encolar(heap_t *heap, void *elem){
 
     void **datos = heap->datos;
     size_t posicion = heap->cantidad;
-    size_t padre = (posicion - 1) / 2;
 
     datos[posicion] = elem;
     heap->cantidad ++;
-    downheap(datos, heap->cantidad, padre, heap->cmp);
+    upheap(datos, posicion, heap->cmp);
     return true;
 }
 

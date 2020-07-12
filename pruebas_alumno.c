@@ -15,7 +15,13 @@ int cmp_enteros(const void *a, const void *b) {
         return 0;
     return (*x > *y) ? 1 : -1;
 }
-//cmp_func_t cmp = cmp_enteros;
+
+// funcion de destruccion auxiliar
+void destruir_enteros(void *dato) {
+    int *a = (int*)dato;
+    free(a);
+    return;
+}
 
 
 void heap_prueba_crear() {
@@ -29,6 +35,42 @@ void heap_prueba_crear() {
     print_test("desencolar en heap vacio devuelve NULL", heap_desencolar(heap) == NULL);
     heap_destruir(heap, NULL);
     print_test("se destruyó el heap", true);
+}
+
+void heap_pruebas_con_un_elemento() {
+    printf("------inicio prueba heap crear\n");
+    heap_t *heap = heap_crear(cmp_enteros);
+    int a = 5;
+
+    print_test("ingresando un elemento al heap", heap_encolar(heap, &a));
+    print_test("el heap deja de estar vacio", !heap_esta_vacio(heap));
+    print_test("la cantidad en el heap es 1", heap_cantidad(heap) == 1);
+    print_test("el maximo es el esperado", heap_ver_max(heap) == &a);
+    print_test("desencolar devuelve el elemento esperado", heap_desencolar(heap) == &a);
+    print_test("el heap vuelve a estar vacio", heap_esta_vacio(heap));
+    print_test("la cantidad vuelve a ser cero", heap_cantidad(heap) == 0);
+    print_test("desencolar devuelve NULL", !heap_desencolar(heap));
+    print_test("el maximo es nulo", heap_ver_max(heap) == NULL);
+    heap_destruir(heap, NULL);
+}
+
+void pruebas_heap_destruccion_con_funcion() {
+    printf("------inicio prueba destruir heap con free\n");
+    heap_t *heap = heap_crear(cmp_enteros);
+    int *a = malloc(sizeof(int));
+    int *b = malloc(sizeof(int));
+    int *c = malloc(sizeof(int));
+    int *d = malloc(sizeof(int));
+    *a = 1;
+    *b = 2;
+    *c = 3;
+    *d = 4;
+    heap_encolar(heap, a);
+    heap_encolar(heap, b);
+    heap_encolar(heap, c);
+    heap_encolar(heap, d);
+    heap_destruir(heap, destruir_enteros);
+    print_test("se destruyó el heap con funcion de destruccion", true);
 }
 
 void heap_prueba_crear_arr(){
@@ -75,6 +117,8 @@ void heap_prueba_destruir_free(){
 
 void pruebas_heap_alumno(void){
     heap_prueba_crear();
+    heap_pruebas_con_un_elemento();
+    //pruebas_heap_destruccion_con_funcion();
     heap_prueba_crear_arr();
     //heap_prueba_destruir_NULL();
     //heap_prueba_destruir_free();
