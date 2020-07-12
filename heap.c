@@ -4,6 +4,10 @@
 #include "heap.h"
 
 #define TAM 7
+#define F_RED_MAX 2      //factor de redimension maximo
+#define F_RED_MIN 1/2    //factor de redimension minimo
+#define F_CAR_MAX 1      //factor de carga maximo
+#define F_CAR_MIN 1/4    //factor de carga minimo
 
 struct heap{
 	void** datos;
@@ -88,13 +92,43 @@ bool heap_esta_vacio(const heap_t *heap){
 	return heap->cantidad == 0;
 }
 
+bool heap_hay_espacio(heap_t *heap) {
+	size_t factor_carga = (heap->cantidad) / (heap->capacidad);
+	if( (factor_carga < F_CAR_MAX) && (factor_carga > F_CAR_MIN) )
+		return true;
+
+	size_t tam_nuevo = 0;
+	
+	if(factor_carga >= F_CAR_MAX) {
+		tam_nuevo = heap->capacidad * F_RED_MAX;
+	}
+	if(factor_carga <= F_CAR_MIN) {
+		tam_nuevo = heap->capacidad * F_RED_MIN;
+	}
+
+	void **nuevos_datos = realloc(heap->datos, tam_nuevo);
+	if(!nuevos_datos) return false;
+
+	heap->datos = nuevos_datos;
+	return true;
+}
+
 /* Agrega un elemento al heap. El elemento no puede ser NULL.
  * Devuelve true si fue una operación exitosa, o false en caso de error.
  * Pre: el heap fue creado.
  * Post: se agregó un nuevo elemento al heap.
  */
 bool heap_encolar(heap_t *heap, void *elem){
+	if(!heap_hay_espacio(heap)) return false;
 
+    void **datos = heap->datos;
+    size_t posicion = heap->cantidad;
+    size_t padre = (posicion - 1) / 2;
+
+    datos[posicion] = elem;
+    heap->cantidad ++;
+    downheap(datos, heap->cantidad, padre, heap->cmp);
+    return true;
 }
 
 void *heap_ver_max(const heap_t *heap){
@@ -106,6 +140,7 @@ void *heap_ver_max(const heap_t *heap){
 
 void *heap_desencolar(heap_t *heap){
 	if(!heap->cantidad) return NULL;
+	size_t cantidad = heap->cantidad;
 
 	swap(heap->datos, 0, heap->cantidad-1);
 	void* ret = heap->datos[cantidad-1];
@@ -113,6 +148,7 @@ void *heap_desencolar(heap_t *heap){
 	downheap(heap->datos, heap->cantidad, 0, heap->cmp);
 
 	// redimensionar a la mitad si cantidad < capacidad / 4
+	heap_hay_espacio(heap);
 
 	return ret;
 }
