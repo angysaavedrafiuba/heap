@@ -33,7 +33,7 @@ void heap_prueba_crear() {
     heap_destruir(heap, NULL);
     print_test("se destruyó el heap", true);
 }
-
+/*
 void heap_pruebas_con_un_elemento() {
     printf("------inicio prueba heap crear\n");
     heap_t *heap = heap_crear(cmp_enteros);
@@ -69,7 +69,7 @@ void pruebas_heap_destruccion_con_funcion() {
     heap_destruir(heap, destruir_enteros);
     print_test("se destruyó el heap con funcion de destruccion", true);
 }
-
+*/
 void heap_prueba_crear_arr(){
     printf("------inicio prueba heap crear arr\n");
     int a[] = {6,4,7,9,1,2,8,3,5,0};
@@ -88,7 +88,7 @@ void heap_prueba_crear_arr(){
     heap_destruir(heap, NULL);
     print_test("se destruyó el heap", true);
 }
-
+/*
 void heap_prueba_destruir_NULL(){
     printf("------inicio prueba heap destruir NULL\n");
 
@@ -147,14 +147,14 @@ void heap_prueba_cantidad(){
     heap_destruir(heap, NULL);
     print_test("se destruyó el heap", true);
 }
-
+*/
 void pruebas_heap_alumno(void){
     heap_prueba_crear();
-    heap_pruebas_con_un_elemento();
+    //heap_pruebas_con_un_elemento();
     //pruebas_heap_destruccion_con_funcion();
     heap_prueba_crear_arr();
-    heap_prueba_destruir_NULL();
-    heap_prueba_destruir_free();
-    heap_prueba_cantidad();
+    //heap_prueba_destruir_NULL();
+    //heap_prueba_destruir_free();
+    //heap_prueba_cantidad();
 
 }

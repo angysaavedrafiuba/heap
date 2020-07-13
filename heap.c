@@ -69,24 +69,22 @@ void downheap(void *arreglo[], size_t tam, size_t padre, cmp_func_t cmp){
 	}
 }
 
-void** heapify(void *arreglo[], size_t n, cmp_func_t cmp){
-	void** datos = malloc(sizeof(void*)*n);
-	if(!datos) return NULL;
-
-	for(size_t i = 0; i < n; i++)
-		datos[i] = arreglo[i];
-
+void heapify(void *arreglo[], size_t n, cmp_func_t cmp){
 	for(size_t i = 0; i< n; i++)
-		downheap(datos, n, n-i-1, cmp);
-
-	return datos;
+		downheap(arreglo, n, n-i-1, cmp);
 }
 
 heap_t *heap_crear_arr(void *arreglo[], size_t n, cmp_func_t cmp){
 	heap_t* heap = malloc(sizeof(heap_t));
 	if(!heap) return NULL;
+
+	heap->datos = malloc(sizeof(void*)*n);
+	if(!heap->datos) return NULL;
+
+	for(size_t i = 0; i < n; i++)
+		heap->datos[i] = arreglo[i];
 	
-	heap->datos = heapify(arreglo, n, cmp);
+	heapify(heap->datos, n, cmp);
 	heap->capacidad = n;
 	heap->cantidad = n;
 	heap->cmp = cmp;
