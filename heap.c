@@ -58,7 +58,7 @@ void upheap(void **datos, size_t hijo, cmp_func_t cmp) {
     }
 }
 
-void downheap(void *arreglo[], size_t tam, size_t padre, cmp_func_t cmp){
+/*void downheap(void *arreglo[], size_t tam, size_t padre, cmp_func_t cmp){
 	if (padre >= tam) return;
 	size_t izq = 2 * padre  + 1;
 	size_t der = 2 * padre + 2;
@@ -67,6 +67,23 @@ void downheap(void *arreglo[], size_t tam, size_t padre, cmp_func_t cmp){
 		swap(arreglo, max, padre);
 		downheap(arreglo, tam, max, cmp);
 	}
+}*/
+
+void downheap(void **datos, size_t tam, size_t padre, cmp_func_t cmp) {
+    size_t hijo_der = (2 * padre) + 2;
+    size_t hijo_izq = (2 * padre) + 1;
+    size_t pos_maxima = tam-1;
+
+    if(hijo_der > pos_maxima && hijo_izq > pos_maxima) {
+        return;
+    }
+
+    size_t reemplazo = calculo_maximo(datos, tam, cmp, padre, hijo_izq, hijo_der);
+    if(cmp(datos[reemplazo], datos[padre]) > 0) {
+        swap(datos, padre, reemplazo);
+        downheap(datos, tam, reemplazo, cmp);
+    }
+    return;
 }
 
 void heapify(void *arreglo[], size_t n, cmp_func_t cmp){
