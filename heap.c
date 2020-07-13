@@ -137,6 +137,7 @@ bool heap_hay_espacio(heap_t *heap) {
 	}
 	if(factor_carga <= F_CAR_MIN) {
 		tam_nuevo = heap->capacidad * F_RED_MIN;
+		if(tam_nuevo <= TAM) return true;
 	}
 
 	void **nuevos_datos = realloc(heap->datos, tam_nuevo);
