@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define LARGO 1000
+
 
 int cmp_enteros(const void *a, const void *b) {
     int *x = (int*) a;
@@ -33,7 +35,7 @@ void heap_prueba_crear() {
     heap_destruir(heap, NULL);
     print_test("se destruyó el heap", true);
 }
-/*
+
 void heap_pruebas_con_un_elemento() {
     printf("------inicio prueba heap crear\n");
     heap_t *heap = heap_crear(cmp_enteros);
@@ -69,7 +71,7 @@ void pruebas_heap_destruccion_con_funcion() {
     heap_destruir(heap, destruir_enteros);
     print_test("se destruyó el heap con funcion de destruccion", true);
 }
-*/
+
 void heap_prueba_crear_arr(){
     printf("------inicio prueba heap crear arr\n");
     int a[] = {6,4,7,9,1,2,8,3,5,0};
@@ -88,7 +90,7 @@ void heap_prueba_crear_arr(){
     heap_destruir(heap, NULL);
     print_test("se destruyó el heap", true);
 }
-/*
+
 void heap_prueba_destruir_NULL(){
     printf("------inicio prueba heap destruir NULL\n");
 
@@ -147,7 +149,7 @@ void heap_prueba_cantidad(){
     heap_destruir(heap, NULL);
     print_test("se destruyó el heap", true);
 }
-*/
+
 
 void pruebas_heapsort() {
     printf("------inicio pruebas heapsort\n");
@@ -166,13 +168,64 @@ void pruebas_heapsort() {
     free(arreglo);
 }
 
+static void prueba_heap_volumen(size_t largo, bool debug){
+    printf("------inicio prueba heap volumen\n");
+    heap_t* heap = heap_crear(cmp_enteros);
+
+    //const size_t largo_clave = 10;
+    //char (*claves)[largo_clave] = malloc(largo * largo_clave);
+
+    int* valores[largo];
+
+    // Inserta 'largo' parejas en el heap 
+    bool ok = true;
+    for (size_t i = 0; i < largo; i++) {
+        valores[i] = malloc(sizeof(int));
+        //sprintf(claves[i], "%08d", i);
+        *valores[i] = i;
+        ok = heap_encolar(heap, valores[i]);
+        if (!ok) break;
+        print_test("Encola elem ok", ok);
+    }
+
+    if (debug) print_test("Prueba heap almacenar muchos elementos", ok);
+    if (debug) print_test("Prueba heap la cantidad de elementos es correcta", heap_cantidad(heap) == largo);
+
+    // Verifica que borre y devuelva los valores correctos 
+    for (size_t i = 0; i < largo; i++) {
+        ok = heap_desencolar(heap) == valores[largo-1-i];
+        if (!ok) break;
+    }
+
+    if (debug) print_test("Prueba heap borrar muchos elementos", ok);
+    if (debug) print_test("Prueba heap la cantidad de elementos es 0", heap_cantidad(heap) == 0);
+
+    // Destruye el heap y crea uno nuevo que sí libera 
+    heap_destruir(heap, free);
+    heap = heap_crear(cmp_enteros);
+
+    // Inserta 'largo' parejas en el heap 
+    ok = true;
+    for (size_t i = 0; i < largo; i++) {
+        ok = heap_encolar(heap, valores[i]);
+        if (!ok) break;
+    }
+
+    //free(claves);
+
+    // Destruye el heap - debería liberar los enteros 
+    heap_destruir(heap,free);
+
+}
+
 void pruebas_heap_alumno(void){
     heap_prueba_crear();
-    //heap_pruebas_con_un_elemento();
-    //pruebas_heap_destruccion_con_funcion();
+    heap_pruebas_con_un_elemento();
+    pruebas_heap_destruccion_con_funcion();
     heap_prueba_crear_arr();
-    //heap_prueba_destruir_NULL();
-    //heap_prueba_destruir_free();
-    //heap_prueba_cantidad();
+    heap_prueba_destruir_NULL();
+    heap_prueba_destruir_free();
+    heap_prueba_cantidad();
     pruebas_heapsort();
+    prueba_heap_volumen(LARGO,true);
 }
