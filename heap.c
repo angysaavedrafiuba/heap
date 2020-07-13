@@ -163,3 +163,16 @@ void *heap_desencolar(heap_t *heap){
 
 	return ret;
 }
+
+
+void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp) {
+	size_t n = cant; 
+	heapify(elementos, n, cmp);
+	printf("despues de heapify [%d %d %d %d]\n", *(int*)elementos[0], *(int*)elementos[1], *(int*)elementos[2], *(int*)elementos[3]);
+
+	for(size_t i=0; i<cant; i++) {
+		swap(elementos, 0, n-1);
+		n--;
+		downheap(elementos, n, 0, cmp);
+	}
+}

@@ -148,6 +148,24 @@ void heap_prueba_cantidad(){
     print_test("se destruyó el heap", true);
 }
 */
+
+void pruebas_heapsort() {
+    printf("------inicio pruebas heapsort\n");
+    int ** arreglo = malloc(4 * sizeof(int*));
+    int a = 6;
+    int b = 3;
+    int c = 9;
+    int d = 4;
+    arreglo[0] = &a;
+    arreglo[1] = &b;
+    arreglo[2] = &c;
+    arreglo[3] = &d;
+    printf("[%d %d %d %d]\n", *arreglo[0], *arreglo[1], *arreglo[2], *arreglo[3]);
+    heap_sort((void **)arreglo, 4, cmp_enteros);
+    printf("[%d %d %d %d]\n", *arreglo[0], *arreglo[1], *arreglo[2], *arreglo[3]);
+    free(arreglo);
+}
+
 void pruebas_heap_alumno(void){
     heap_prueba_crear();
     //heap_pruebas_con_un_elemento();
@@ -156,5 +174,5 @@ void pruebas_heap_alumno(void){
     //heap_prueba_destruir_NULL();
     //heap_prueba_destruir_free();
     //heap_prueba_cantidad();
-
+    pruebas_heapsort();
 }
