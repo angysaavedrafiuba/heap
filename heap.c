@@ -137,10 +137,10 @@ bool heap_encolar(heap_t *heap, void *elem){
 
     void **datos = heap->datos;
     size_t posicion = heap->cantidad;
-
     datos[posicion] = elem;
     heap->cantidad ++;
     upheap(datos, posicion, heap->cmp);
+
     return true;
 }
 
