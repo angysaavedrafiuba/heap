@@ -197,7 +197,6 @@ bool arreglo_esta_ordenado(void **arreglo, size_t cant, cmp_func_t cmp) {
     void *anterior = arreglo[0];
     for(size_t i=0; i<cant; i++) {
         if(cmp(anterior, arreglo[i]) > 0) {
-            printf("se rompio en: %zu", i);
             return false;
         }
         anterior = arreglo[i];
