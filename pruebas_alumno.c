@@ -176,7 +176,7 @@ static void prueba_heap_volumen(size_t largo, bool debug){
     bool ok = true;
     for (size_t i = 0; i < largo; i++) {
         valores[i] = malloc(sizeof(int));
-        *valores[i] = i;
+        *valores[i] = (int)i;
         ok = heap_encolar(heap, valores[i]);
         if (!ok) break;
         //print_test("Encola elem ok", ok);

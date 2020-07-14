@@ -58,16 +58,6 @@ void upheap(void **datos, size_t hijo, cmp_func_t cmp) {
     }
 }
 
-/*void downheap(void *arreglo[], size_t tam, size_t padre, cmp_func_t cmp){
-	if (padre >= tam) return;
-	size_t izq = 2 * padre  + 1;
-	size_t der = 2 * padre + 2;
-	size_t max = calculo_maximo(arreglo, tam, cmp, padre, izq, der);
-	if(max != padre){
-		swap(arreglo, max, padre);
-		downheap(arreglo, tam, max, cmp);
-	}
-}*/
 
 void downheap(void **datos, size_t tam, size_t padre, cmp_func_t cmp) {
     size_t hijo_der = (2 * padre) + 2;
@@ -126,24 +116,24 @@ bool heap_esta_vacio(const heap_t *heap){
 }
 
 bool heap_hay_espacio(heap_t *heap) {
-	size_t factor_carga = (heap->cantidad) / (heap->capacidad);
+	float factor_carga = (float)(heap->cantidad) / (float)(heap->capacidad);
 	if( (factor_carga < F_CAR_MAX) && (factor_carga > F_CAR_MIN) )
 		return true;
 
 	size_t tam_nuevo = 0;
-	
 	if(factor_carga >= F_CAR_MAX) {
-		tam_nuevo = heap->capacidad * F_RED_MAX;
+		tam_nuevo = (heap->capacidad) * F_RED_MAX;
 	}
-	if(factor_carga <= F_CAR_MIN) {
+	else if(factor_carga <= F_CAR_MIN) {
 		tam_nuevo = heap->capacidad * F_RED_MIN;
 		if(tam_nuevo <= TAM) return true;
 	}
 
-	void **nuevos_datos = realloc(heap->datos, tam_nuevo);
+	void **nuevos_datos = realloc(heap->datos, tam_nuevo * sizeof(void*));
 	if(!nuevos_datos) return false;
 
 	heap->datos = nuevos_datos;
+	heap->capacidad = tam_nuevo;
 	return true;
 }
 
@@ -176,7 +166,6 @@ void *heap_desencolar(heap_t *heap){
 	heap->cantidad--;
 	downheap(heap->datos, heap->cantidad, 0, heap->cmp);
 
-	// redimensionar a la mitad si cantidad < capacidad / 4
 	heap_hay_espacio(heap);
 
 	return ret;
@@ -186,7 +175,6 @@ void *heap_desencolar(heap_t *heap){
 void heap_sort(void *elementos[], size_t cant, cmp_func_t cmp) {
 	size_t n = cant; 
 	heapify(elementos, n, cmp);
-	//printf("despues de heapify [%d %d %d %d]\n", *(int*)elementos[0], *(int*)elementos[1], *(int*)elementos[2], *(int*)elementos[3]);
 
 	for(size_t i=0; i<cant; i++) {
 		swap(elementos, 0, n-1);
