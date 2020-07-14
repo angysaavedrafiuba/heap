@@ -37,7 +37,7 @@ void heap_prueba_crear() {
 }
 
 void heap_pruebas_con_un_elemento() {
-    printf("------inicio prueba heap crear\n");
+    printf("\n------inicio prueba heap crear\n");
     heap_t *heap = heap_crear(cmp_enteros);
     int a = 5;
 
@@ -54,7 +54,7 @@ void heap_pruebas_con_un_elemento() {
 }
 
 void pruebas_heap_destruccion_con_funcion() {
-    printf("------inicio prueba destruir heap con free\n");
+    printf("\n------inicio prueba destruir heap con free\n");
     heap_t *heap = heap_crear(cmp_enteros);
     int *a = malloc(sizeof(int));
     int *b = malloc(sizeof(int));
@@ -73,7 +73,7 @@ void pruebas_heap_destruccion_con_funcion() {
 }
 
 void heap_prueba_crear_arr(){
-    printf("------inicio prueba heap crear arr\n");
+    printf("\n------inicio prueba heap crear arr\n");
     int a[] = {6,4,7,9,1,2,8,3,5,0};
     void* arr[10];
 
@@ -92,7 +92,7 @@ void heap_prueba_crear_arr(){
 }
 
 void heap_prueba_destruir_NULL(){
-    printf("------inicio prueba heap destruir NULL\n");
+    printf("\n------inicio prueba heap destruir NULL\n");
 
     int a = 1;
     heap_t *heap = heap_crear(cmp_enteros);
@@ -108,7 +108,7 @@ void heap_prueba_destruir_NULL(){
 
 
 void heap_prueba_destruir_free(){
-    printf("------inicio prueba heap destruir FREE\n");
+    printf("\n------inicio prueba heap destruir FREE\n");
 
     int *h = malloc(sizeof(int));
     *h=1;
@@ -124,7 +124,7 @@ void heap_prueba_destruir_free(){
 }
 
 void heap_prueba_cantidad(){
-    printf("------inicio prueba heap cantidad\n");
+    printf("\n------inicio prueba heap cantidad\n");
     int a[] = {6,4,7,9,1,2,8,3,5,0};
     void* arr[10];
 
@@ -151,25 +151,8 @@ void heap_prueba_cantidad(){
 }
 
 
-void pruebas_heapsort() {
-    printf("------inicio pruebas heapsort\n");
-    int ** arreglo = malloc(4 * sizeof(int*));
-    int a = 6;
-    int b = 3;
-    int c = 9;
-    int d = 4;
-    arreglo[0] = &a;
-    arreglo[1] = &b;
-    arreglo[2] = &c;
-    arreglo[3] = &d;
-    printf("[%d %d %d %d]\n", *arreglo[0], *arreglo[1], *arreglo[2], *arreglo[3]);
-    heap_sort((void **)arreglo, 4, cmp_enteros);
-    printf("[%d %d %d %d]\n", *arreglo[0], *arreglo[1], *arreglo[2], *arreglo[3]);
-    free(arreglo);
-}
-
 static void prueba_heap_volumen(size_t largo, bool debug){
-    printf("------inicio prueba heap volumen\n");
+    printf("\n------inicio prueba heap volumen\n");
     heap_t* heap = heap_crear(cmp_enteros);
     int* valores[largo];
 
@@ -209,26 +192,35 @@ static void prueba_heap_volumen(size_t largo, bool debug){
 
 }
 
+// funcion auxiliar para pruebas heapsort
+bool arreglo_esta_ordenado(void **arreglo, size_t cant, cmp_func_t cmp) {
+    void *anterior = arreglo[0];
+    for(size_t i=0; i<cant; i++) {
+        if(cmp(anterior, arreglo[i]) > 0) {
+            printf("se rompio en: %zu", i);
+            return false;
+        }
+        anterior = arreglo[i];
+    }
+    return true;
+}
+
+
 static void prueba_heapsort_volumen(size_t largo){
-    printf("------inicio prueba heapsort volumen\n");
+    printf("\n------inicio prueba heapsort volumen\n");
     int* valores[largo];
 
     for (size_t i = 0; i < largo; i++) {
         valores[i] = malloc(sizeof(int));
-        *valores[i] = rand() % largo;
+        *valores[i] = (int)(rand() % largo);
     }
 
-    printf("Orden antes del heapsort\n");
-    for(size_t i = 0; i< largo; i++)
-        printf("[%d]",*(int*)valores[i] );
+    print_test("el arreglo inicialmente esta desordenado", !arreglo_esta_ordenado((void**)valores, largo, cmp_enteros));
+    heap_sort((void**)valores, largo, cmp_enteros);
+    print_test("se le aplica heapsort al arreglo", true);
+    print_test("el arreglo ahora esta ordenado", arreglo_esta_ordenado((void**)valores, largo, cmp_enteros));
 
-    heap_sort((void*)valores, largo, cmp_enteros);
-
-    printf("Orden despues del heapsort\n");
-    for(size_t i = 0; i< largo; i++)
-        printf("[%d]",*(int*)valores[i] );
-
-    print_test("\nPrueba heapsort volumen", true);
+    print_test("Prueba heapsort volumen", true);
     for (size_t i = 0; i < largo; i++)
         free(valores[i]);
 
@@ -242,7 +234,6 @@ void pruebas_heap_alumno(void){
     heap_prueba_destruir_NULL();
     heap_prueba_destruir_free();
     heap_prueba_cantidad();
-    pruebas_heapsort();
     prueba_heap_volumen(LARGO,true);
     prueba_heapsort_volumen(100);
 }
