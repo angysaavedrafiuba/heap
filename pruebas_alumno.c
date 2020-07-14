@@ -171,21 +171,15 @@ void pruebas_heapsort() {
 static void prueba_heap_volumen(size_t largo, bool debug){
     printf("------inicio prueba heap volumen\n");
     heap_t* heap = heap_crear(cmp_enteros);
-
-    //const size_t largo_clave = 10;
-    //char (*claves)[largo_clave] = malloc(largo * largo_clave);
-
     int* valores[largo];
 
-    // Inserta 'largo' parejas en el heap 
     bool ok = true;
     for (size_t i = 0; i < largo; i++) {
         valores[i] = malloc(sizeof(int));
-        //sprintf(claves[i], "%08d", i);
         *valores[i] = i;
         ok = heap_encolar(heap, valores[i]);
         if (!ok) break;
-        print_test("Encola elem ok", ok);
+        //print_test("Encola elem ok", ok);
     }
 
     if (debug) print_test("Prueba heap almacenar muchos elementos", ok);
@@ -204,17 +198,39 @@ static void prueba_heap_volumen(size_t largo, bool debug){
     heap_destruir(heap, free);
     heap = heap_crear(cmp_enteros);
 
-    // Inserta 'largo' parejas en el heap 
     ok = true;
     for (size_t i = 0; i < largo; i++) {
         ok = heap_encolar(heap, valores[i]);
         if (!ok) break;
     }
 
-    //free(claves);
-
     // Destruye el heap - debería liberar los enteros 
     heap_destruir(heap,free);
+
+}
+
+static void prueba_heapsort_volumen(size_t largo){
+    printf("------inicio prueba heapsort volumen\n");
+    int* valores[largo];
+
+    for (size_t i = 0; i < largo; i++) {
+        valores[i] = malloc(sizeof(int));
+        *valores[i] = rand() % largo;
+    }
+
+    printf("Orden antes del heapsort\n");
+    for(size_t i = 0; i< largo; i++)
+        printf("[%d]",*(int*)valores[i] );
+
+    heap_sort((void*)valores, largo, cmp_enteros);
+
+    printf("Orden despues del heapsort\n");
+    for(size_t i = 0; i< largo; i++)
+        printf("[%d]",*(int*)valores[i] );
+
+    print_test("\nPrueba heapsort volumen", true);
+    for (size_t i = 0; i < largo; i++)
+        free(valores[i]);
 
 }
 
@@ -228,4 +244,5 @@ void pruebas_heap_alumno(void){
     heap_prueba_cantidad();
     pruebas_heapsort();
     prueba_heap_volumen(LARGO,true);
+    prueba_heapsort_volumen(100);
 }
